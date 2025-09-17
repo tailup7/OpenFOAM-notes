@@ -45,3 +45,26 @@ OpenFOAMをインストールしたら、適当なチュートリアルケース
 ```
 
 ## 実行
+用意したメッシュファイルを OpenFOAM が読める形式にする。例えば Gmsh で作成したメッシュファイルなら、
+``` bash
+$ gmshToFoam foo.msh  # 他にも例えば、ICEM CFDで作成したメッシュなら、fluentMeshToFoam foo.msh 
+```
+メッシュの品質を確認する。
+``` bash
+$ checkMesh
+```
+これで `mesh failed.` などが出たら、メッシュのどこかが破綻していて、ほとんどの場合解析が上手くいかないのでメッシュファイルを修正するか作り直すこと。
+`Mesh OK.`と出たらOK. <br>
+(必要なら) メッシュファイルのスケール変換をする。
+```
+$ transformPoints -scale "(1e-3 1e-3 1e-3)"
+```
+以上で下準備が終わったのでソルバを実行する。
+``` bash
+$ simpleFoam | tee log # ログ出力するオプションも付けておく
+```
+上記コマンド群はシェルスクリプトにしておくと良い。ルートディレクトリにて、(*.sh) を用意しておき、 
+```
+$ chmod u+x myCommands.sh
+$ ./myCommands.sh
+```
