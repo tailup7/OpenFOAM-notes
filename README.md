@@ -63,6 +63,7 @@ $ transformPoints -scale "(1e-3 1e-3 1e-3)"
 ``` bash
 $ simpleFoam | tee log # ログ出力するオプションも付けておく
 ```
+### ちなみに
 上記コマンド群はシェルスクリプトにしておくと良い。ルートディレクトリにて、(*.sh) を用意しておき、 
 ```
 $ chmod u+x myCommands.sh
