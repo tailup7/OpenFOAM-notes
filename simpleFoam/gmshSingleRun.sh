@@ -1,4 +1,6 @@
 #!/bin/bash
+# 使用している計算機クラスタが古すぎて、OpenFOAMのバージョンも古い(OpenFOAM-v1612+)
+# そのため計算後に P及びWSSに rhoを掛ける処理がまわりくどくなっている
 set -e  # エラーが出たら中断
 
 # === .mshファイル名を取得 ===
@@ -10,6 +12,9 @@ if [ -z "$mshfile" ]; then
 fi
 
 echo "=== Using mesh file: $mshfile ==="
+
+RHO=1060          # kg/m^3（血液密度）
+PATCHES="(WALL)"
 
 # Gmsh形式メッシュをOpenFOAM形式に変換
 gmshToFoam "$mshfile"
@@ -26,12 +31,14 @@ fi
 
 # constant/polyMesh/boundary ファイル内の "WALL" の "type" を "patch"から "wall" に変更
 # これしないとWSSが計算されない。
-sed -i 's/\(WALL.*type[ \t]*\)patch/\1wall/' constant/polyMesh/boundary
+sed -i '/^[[:space:]]*WALL[[:space:]]*$/,/^[[:space:]]*}[[:space:]]*$/ s/\(type[[:space:]]*\)patch;/\1wall;/' constant/polyMesh/boundary
 
 # # simpleソルバ実行。ログをコンソールに流しながらファイルとしても出力する
 simpleFoam | tee log
 
 # OpenFOAM は p を p/ρ で計算している (両辺をρで割ったNS式) ので、計算終了後に ρ をかけて正しい圧力値にする
 # (wallShearStressの部分は計算していなければコメントアウトしてください)
-postProcess -func "fieldScale(name=p; scale=1060)"
-postProcess -func "fieldScale(name=wallShearStress; scale=1060)"
+simpleFoam -postProcess -func "wallShearStress(patches $PATCHES; writeFields yes;)" -latestTime
+
+# pythonスクリプトでPa単位へ変換
+python pa_convert.py --rho "$RHO" --time latest

@@ -1,0 +1,64 @@
+#!/bin/bash
+#PBS -N simpleFoam_job
+#PBS -q default
+#PBS -l nodes=2:ppn=36
+#PBS -l walltime=24:00:00
+#PBS -j oe
+
+set -e
+cd "$PBS_O_WORKDIR"
+
+# module load openfoam openmpi
+# module load python
+
+NP=${PBS_NP}
+HOSTFILE=${PBS_NODEFILE}
+
+echo "NP=$NP"
+echo "Hosts:"; uniq -c "$HOSTFILE"
+
+RHO=1060
+PATCHES="(WALL)"
+
+# === .msh ===
+mshfile=$(ls *.msh | head -n 1)
+[ -z "$mshfile" ] && { echo "cannot find .msh file"; exit 1; }
+echo "=== Using mesh file: $mshfile ==="
+
+gmshToFoam "$mshfile"
+transformPoints -scale "(1e-3 1e-3 1e-3)"
+
+checkMesh | tee checkMesh.log
+grep -q "Mesh OK" checkMesh.log || { echo "Mesh check failed"; exit 1; }
+
+sed -i '/^[[:space:]]*WALL[[:space:]]*$/,/^[[:space:]]*}[[:space:]]*$/ s/\(type[[:space:]]*\)patch;/\1wall;/' constant/polyMesh/boundary
+
+# decomposeParDict を NP に合わせる
+if [ -f system/decomposeParDict ]; then
+  sed -i -E "s/^( *numberOfSubdomains[[:space:]]+)[0-9]+;/\1${NP};/" system/decomposeParDict
+else
+  cat > system/decomposeParDict <<EOF
+numberOfSubdomains ${NP};
+method          scotch;
+distributed     no;
+roots           ();
+EOF
+fi
+
+renumberMesh -overwrite || true
+decomposePar -force
+
+# simpleFoam parallel run
+mpirun -np "$NP" -hostfile "$HOSTFILE" simpleFoam -parallel | tee log.parallel
+
+# output wss
+mpirun -np "$NP" -hostfile "$HOSTFILE" simpleFoam -postProcess \
+  -parallel \
+  -func "wallShearStress(patches $PATCHES; writeFields yes;)" \
+  -latestTime
+
+# reconstruct, only latest time 
+reconstructPar -latestTime
+
+# Pa converter
+python pa_convert.py --rho "$RHO" --time latest
