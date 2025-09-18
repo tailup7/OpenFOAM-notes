@@ -63,9 +63,18 @@ $ transformPoints -scale "(1e-3 1e-3 1e-3)"
 ``` bash
 $ simpleFoam | tee log # ログ出力するオプションも付けておく
 ```
-### ちなみに
-上記コマンド群はシェルスクリプトにしておくと良い。ルートディレクトリにて、(*.sh) を用意しておき、 
+<br>
+OpenFOAMは 圧力 p を p/rho として計算している(NS式の両辺をrhoで割ったものを解いているため)。<br>
+なので、計算終了後に p (やwallShearStress) に rho (血液なら1060kg/m^3) を掛ける後処理をしておく。
+
+``` bash
+$ simpleFoam -postProcess -func "wallShearStress(patches (WALL); writeFields yes;)" -latestTime
+$ python pa_convert.py --rho 1060 --time latest
 ```
-$ chmod u+x myCommands.sh
+
+### ちなみに
+上記コマンド群はシェルスクリプトにしておくと良い。
+``` bash
+$ chmod u+x myCommands.sh   # 並列化させるなら qsub myCommands.pbs など
 $ ./myCommands.sh
 ```
