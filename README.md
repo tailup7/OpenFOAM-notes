@@ -1,6 +1,27 @@
 # OpenFOAM-notes
-OpenFOAMのおぼえがき。血流解析のため。圧力駆動の流入条件、拍動流、WSS・OSI計算、並列化など。<br>
+血流解析に関するOpenFOAM設定・スクリプトを記録した備忘録。<br>
+
+圧力駆動の流入条件、拍動流、WSS・OSI計算、並列化など。<br>
 生体を対象にするので流体の密度は一定、なので扱うのは非圧縮性ソルバのみ。
+
+### 環境
+
+|usage type | environment | OS                |  job scheduler         | OpenFOAM |   Python      |
+|-----------|-------------|-------------------|:----------------------:|----------|---------------|    
+| shared    | HPC cluster | centOS 7.4.1708   |  Portable Batch System | v1612+   | Python 3.11.0 |
+| private   | local       | ubuntu22.04.5     |             -          | v2312    | Python 3.13.0 | 
+
+上記の2つの環境を使い分けている。このリポジトリ内の設定ファイル(0/Uなど)やバッチファイル(*.sh や *.pbs)は、1つ目の環境(centOS7, OpenFOAM-v1612+)で使っている。
+
+### 前処理と後処理
+メッシュ生成ツールとして、以下の2つを使っている。
++ Ansys ICEM CFD
++ Gmsh
+
+Ansys ICEM CFDは商用ツールであり、自身もいずれライセンスが切れるため、OSSであるGmshを主に使っている。このリポジトリ内のバッチファイル(*.sh や *.pbs)は、Gmshで生成したファイルに対応したスクリプトになっている。<br>
+<br>
+また解析結果の可視化には ParaView を使用している。
+
 
 ## 環境構築
 
@@ -45,19 +66,20 @@ OpenFOAMをインストールしたら、適当なチュートリアルケース
 ```
 
 ## 実行
-用意したメッシュファイルを OpenFOAM が読める形式にする。例えば Gmsh で作成したメッシュファイルなら、
+用意したメッシュファイルのデータ形式を OpenFOAM 側で読み込むためのコマンドを実行する。例えば Gmsh で作成したメッシュファイルなら、
 ``` bash
 $ gmshToFoam foo.msh  # 他にも例えば、ICEM CFDで作成したメッシュなら、fluentMeshToFoam foo.msh 
 ```
-メッシュの品質を確認する。
+次に、いちおうメッシュの品質を確認しておく。
 ``` bash
 $ checkMesh
 ```
-これで `mesh failed.` などが出たら、メッシュのどこかが破綻していて、ほとんどの場合解析が上手くいかないのでメッシュファイルを修正するか作り直すこと。
+これで `mesh failed.` などが出たら、メッシュのどこかが破綻していて、ほとんどの場合計算が発散したりするのでメッシュファイルを修正するか作り直すこと。
 `Mesh OK.`と出たらOK. <br>
-(必要なら) メッシュファイルのスケール変換をする。
-```
-$ transformPoints -scale "(1e-3 1e-3 1e-3)"
+(必要なら) メッシュファイルのスケール変換をする。(OpenFOAM は 長さの単位はメートル)
+``` bash
+# 医用画像の段階でmm単位であり、segmentation→smoothing→meshing までずっとmmで扱ってきたが、OpneFOAMはmで計算するため。
+$ transformPoints -scale "(1e-3 1e-3 1e-3)" 
 ```
 以上で下準備が終わったのでソルバを実行する。
 ``` bash
@@ -72,9 +94,5 @@ $ simpleFoam -postProcess -func "wallShearStress(patches (WALL); writeFields yes
 $ python pa_convert.py --rho 1060 --time latest
 ```
 
-### ちなみに
-上記コマンド群はシェルスクリプトにしておくと良い。
-``` bash
-$ chmod u+x myCommands.sh   # 並列化させるなら qsub myCommands.pbs など
-$ ./myCommands.sh
-```
+※ pa_convert.py は 計算終了後の pファイル や wssファイル 内の数値を1060倍する自作コードです。<br>
+　 この後処理コマンドが必須というわけではなく、計算結果のp (やwss) が p/rho になっていることが頭に入っていればOKです。
