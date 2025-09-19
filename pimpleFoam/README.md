@@ -9,7 +9,7 @@ pimpleFoamソルバで拍動流の計算を行う。つまり下図のような�
 + system/controlDict で、何周期分計算するか(= endTime)(※流路全体が周期定常に達してから最後の1周期を評価すべき)や出力刻み(writeInterval)も含め、適切に設定する。
 
 <p align="center">
-  <img src="pictures/pulseInlet.png" width="60%">
+  <img src="../pictures/pulseInlet.png" width="60%">
 </p>
 
 ## 参考
