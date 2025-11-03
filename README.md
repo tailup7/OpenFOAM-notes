@@ -26,8 +26,37 @@ Ansys ICEM CFDは商用ツールであり、自身もいずれライセンスが
 <br>
 また解析結果の可視化には ParaView を使用している。
 
+## OpenFOAMインストール手順
+(例. もともとのUbuntuOSまたはWSLによるUbuntu環境にOpenFOAM-v2506をインストールする) <br>
+Ubuntu(22.04 or 24.04)ターミナルを起動し、以下コマンドを入力 
+``` bash
+sudo apt update
+sudo apt upgrade -y
+sudo wget -O - http://dl.openfoam.com/add-debian-repo.sh | sudo bash
+sudo apt install openfoam2506-default
+```
+ここまでのコマンド実行で、OpenFOAMは /usr/lib/openfoam/ にインストールされている。
+自分のシェル設定ファイル(home/user/.bashrc)に、OpenFOAMの環境を自動で使えるようにするための設定(usr/lib/openfoam/openfoam2506/etc/bashrc に書いてある) を追加する以下のコマンドを実行
+``` bash
+echo "source /usr/lib/openfoam/openfoam2506/etc/bashrc" >> ~/.bashrc
+source ~/.bashrc
+```
+以上でインストール及び設定は終了。以下のコマンドで動作確認をしてみる。
+```
+mkdir -p $FOAM_RUN
+cd $FOAM_RUN
+cp -r &FOAM_TUTORIALS/incompressible/icoFoam/cavity/cavity .
+cd cavity
+blockMesh
+icoFoam
+```
+計算が完了すると、T=0.500までの物理量が表示されるはず。結果をparaviewで可視化するために、以下のコマンドを実行
+```
+foamToVTK
+```
+生成された `VTK` フォルダ内の `cavity_時刻.vtm` ファイルをparaviewで可視化すると、cavity流れ場が確認できる。
 
-## 環境構築
+参考 https://ss1.xrea.com/penguinitis.g1.xrea.com/study/OpenFOAM/install_memo/install_memo.html 
 
 ## ケース構成
 OpenFOAMをインストールしたら、適当なチュートリアルケースからパッケージをコピーするなどして、以下のようなケース構成を用意する。
