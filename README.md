@@ -6,13 +6,13 @@
 生体を対象にするので流体の密度は一定、なので扱うのは非圧縮性ソルバのみ。
 
 ### 環境
+|usage type | environment | OS                | num of CPU |  job scheduler         | OpenFOAM |   Python      |
+|-----------|-------------|-------------------|:----------:|:----------------------:|:--------:|---------------|    
+| shared    | HPC cluster | centOS 7.4.1708   |            |  Portable Batch System | v1612+   | Python 3.11.0 |
+| private   | local       | ubuntu22.04.5     |            |             -          | v2312    | Python 3.13.0 | 
+| private   | local       | ubuntu24.04(WSL2) |     8      |             -          | v2506    | Python 3.12.3 |
 
-|usage type | environment | OS                |  job scheduler         | OpenFOAM |   Python      |
-|-----------|-------------|-------------------|:----------------------:|----------|---------------|    
-| shared    | HPC cluster | centOS 7.4.1708   |  Portable Batch System | v1612+   | Python 3.11.0 |
-| private   | local       | ubuntu22.04.5     |             -          | v2312    | Python 3.13.0 | 
-
-上記の2つの環境を使い分けている。このリポジトリ内の設定ファイル(0/Uなど)やバッチファイル(*.sh や *.pbs)は、1つ目の環境(centOS7, OpenFOAM-v1612+)で使っている。
+上記の3つの環境を使っている。このリポジトリ内の設定ファイル(0/Uなど)やバッチファイル(*.sh や *.pbs)は、1つ目の環境(centOS7, OpenFOAM-v1612+)で使っている。
 
 #### OpenFOAMのバージョンについて
 OpenFOAMにはOpenCFD社によって年2回更新されるもの(OpenFOAM-v2312, OpenFOAM-v2406, ... )と、 OpenFOAM foundationによって年1回更新されるもの(OpenFOAM11(2022のもの), OpenFOAM12(2023のもの), OpenFOAM13(2024のもの), ...) とがあるが、とくにこだわりが無ければ前者のものでLinux環境に応じた最新のバージョンを利用するのが良いと思われる。最新のバージョンは https://www.openfoam.com/current-release で、各バージョンと Linux distribution との対応は https://www.openfoam.com/news/main-news/openfoam-v2506 で確認できる。
