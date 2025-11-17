@@ -6,9 +6,9 @@
 生体を対象にするので流体の密度は一定、なので扱うのは非圧縮性ソルバのみ。
 
 ### 環境
-|usage type | environment | OS                | num of CPU |  job scheduler         | OpenFOAM |   Python      |
-|-----------|-------------|-------------------|:----------:|:----------------------:|:--------:|---------------|    
-| shared    | HPC cluster | centOS 7.4.1708   |            |  Portable Batch System | v1612+   | Python 3.11.0 |
+|usage type | environment | OS                |         num of CPU         |  job scheduler         | OpenFOAM |   Python      |
+|-----------|-------------|-------------------|:--------------------------:|:----------------------:|:--------:|---------------|    
+| shared    | HPC cluster | centOS 7.4.1708   |  10(login node), 36×3, 32×2|  Portable Batch System | v1612+   | Python 3.11.0 |
 | private   | local       | ubuntu22.04.5     |            |             -          | v2312    | Python 3.13.0 | 
 | private   | local       | ubuntu24.04(WSL2) |     8      |             -          | v2506    | Python 3.12.3 |
 
