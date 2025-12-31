@@ -2,7 +2,7 @@
 
 OpenFOAMのおぼえがき。環境構築とか、実際に使ったスクリプトとか。
 
-### 環境
+### 動作確認環境
 |Usage Type | Environment | OS                |         CPU / Cores                   |  Job Scheduler         | OpenFOAM |   Python       |
 |-----------|-------------|-------------------|:-------------------------------------:|:----------------------:|:--------:|----------------|    
 | shared    | HPC cluster | CentOS 7.4.1708   |  login: 10 cores, compute: 36×3, 32×2 |  Portable Batch System | v1612+   | Python 3.11.0  |
@@ -15,17 +15,9 @@ OpenFOAMのおぼえがき。環境構築とか、実際に使ったスクリプ
 #### OpenFOAMのバージョンについて
 OpenFOAMにはOpenCFD社によって年2回更新されるもの(OpenFOAM-v2312, OpenFOAM-v2406, ... )と、 OpenFOAM foundationによって年1回更新されるもの(OpenFOAM11(2022のもの), OpenFOAM12(2023のもの), OpenFOAM13(2024のもの), ...) とがあるが、とくにこだわりが無ければ前者のものでLinux環境に応じた最新のバージョンを利用するのが良いと思われる。最新のバージョンは https://www.openfoam.com/current-release で、各バージョンと Linux distribution との対応は https://www.openfoam.com/news/main-news/openfoam-v2506 で確認できる。
 
-### 前処理と後処理
-メッシュ生成ツールとして、以下の2つを使っている。
-+ Ansys ICEM CFD
-+ Gmsh
-
-Ansys ICEM CFDは商用ツールであり、自身もいずれライセンスが切れるため、OSSであるGmshを主に使っている。このリポジトリ内のバッチファイル(*.sh や *.pbs)は、Gmsh形式とFluent形式のどちらでも対応するようにしている。<br>
-<br>
-また解析結果の可視化には ParaView を使用している。
 
 ## OpenFOAMインストール手順
-(例. もともとのUbuntuOSまたはWSLによるUbuntu環境にOpenFOAM-v2506をインストールする) <br>
+(例. UbuntuOSまたはWSLによるUbuntu環境にOpenFOAM-v2506をインストールする) <br>
 Ubuntu(22.04 or 24.04)ターミナルを起動し、以下コマンドを入力 
 ``` bash
 sudo apt update
@@ -33,17 +25,17 @@ sudo apt upgrade -y
 sudo wget -O - http://dl.openfoam.com/add-debian-repo.sh | sudo bash
 sudo apt install openfoam2506-default
 ```
-ここまでのコマンド実行で、OpenFOAMは /usr/lib/openfoam/ にインストールされている。
+これで、OpenFOAMが /usr/lib/openfoam/ にインストールされた。
 自分のシェル設定ファイル(home/user/.bashrc)に、OpenFOAMの環境を自動で使えるようにするための設定(usr/lib/openfoam/openfoam2506/etc/bashrc に書いてある) を追加する以下のコマンドを実行
 ``` bash
 echo "source /usr/lib/openfoam/openfoam2506/etc/bashrc" >> ~/.bashrc
 source ~/.bashrc
 ```
-以上でインストール及び設定は終了。以下のコマンドで動作確認をしてみる。
+設定ができたので、以下のコマンドで動作確認をしてみる。やっていることは、2D直交格子を生成し、キャビティ流れを`icoFoam`ソルバで解いている。
 ```
 mkdir -p $FOAM_RUN
 cd $FOAM_RUN
-cp -r &FOAM_TUTORIALS/incompressible/icoFoam/cavity/cavity .
+cp -r $FOAM_TUTORIALS/incompressible/icoFoam/cavity/cavity .
 cd cavity
 blockMesh
 icoFoam
@@ -54,7 +46,8 @@ foamToVTK
 ```
 生成された `VTK` フォルダ内の `cavity_時刻.vtm` ファイルをparaviewで可視化すると、cavity流れ場が確認できる。
 
-参考 https://ss1.xrea.com/penguinitis.g1.xrea.com/study/OpenFOAM/install_memo/install_memo.html 
+#### 参考リンク
++ [OpenFOAM のインストール](https://ss1.xrea.com/penguinitis.g1.xrea.com/study/OpenFOAM/install_memo/install_memo.html)
 
 ## ケース構成
 OpenFOAMをインストールしたら、適当なチュートリアルケースからパッケージをコピーするなどして、以下のようなケース構成を用意する。
@@ -95,6 +88,16 @@ OpenFOAMをインストールしたら、適当なチュートリアルケース
    │   └─ fvSolution  
    └─ foo.msh     
 ```
+
+
+## 前処理と後処理
+メッシュ生成ツールとして、以下の2つを使っている。
++ Ansys ICEM CFD
++ Gmsh
+
+Ansys ICEM CFDは商用ツールであり、自身もいずれライセンスが切れるため、OSSであるGmshを主に使っている。このリポジトリ内のバッチファイル(*.sh や *.pbs)は、Gmsh形式とFluent形式のどちらでも対応するようにしている。<br>
+<br>
+また解析結果の可視化には ParaView を使用している。
 
 ## 実行
 用意したメッシュファイルのデータ形式を OpenFOAM 側で読み込むためのコマンドを実行する。例えば Gmsh で作成したメッシュファイルなら、
