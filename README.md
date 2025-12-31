@@ -1,6 +1,6 @@
 # OpenFOAM-notes
 
-OpenFOAMのおぼえがき。環境構築とか、実際に使ったスクリプトとか。
+OpenFOAMのおぼえがき。環境構築とか、計算に使ったスクリプトとか。
 
 ### 動作確認環境
 |Usage Type | Environment | OS                |         CPU / Cores                   |  Job Scheduler         | OpenFOAM |   Python       |
