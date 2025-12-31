@@ -1,18 +1,16 @@
 # OpenFOAM-notes
 
-血流解析に関するOpenFOAM設定・スクリプトを記録した備忘録。<br>
-<br>
-圧力駆動の流入条件、拍動流、WSS・OSI計算、並列化など。 <br>
-生体を対象にするので流体の密度は一定、なので扱うのは非圧縮性ソルバのみ。
+OpenFOAMのおぼえがき。環境構築とか、実際に使ったスクリプトとか。
 
 ### 環境
-|usage type | environment | OS                |         num of CPU         |  job scheduler         | OpenFOAM |   Python      |
-|-----------|-------------|-------------------|:--------------------------:|:----------------------:|:--------:|---------------|    
-| shared    | HPC cluster | centOS 7.4.1708   |  10(login node), 36×3, 32×2|  Portable Batch System | v1612+   | Python 3.11.0 |
-| private   | local       | ubuntu22.04.5     |            |             -          | v2312    | Python 3.13.0 | 
-| private   | local       | ubuntu24.04(WSL2) |     8      |             -          | v2506    | Python 3.12.3 |
+|Usage Type | Environment | OS                |         CPU / Cores                   |  Job Scheduler         | OpenFOAM |   Python       |
+|-----------|-------------|-------------------|:-------------------------------------:|:----------------------:|:--------:|----------------|    
+| shared    | HPC cluster | CentOS 7.4.1708   |  login: 10 cores, compute: 36×3, 32×2 |  Portable Batch System | v1612+   | Python 3.11.0  |
+| shared    | Fugaku      | RHEL8.10          |  Fujitsu A64FX (48 cores / node)      |  Project Job Manager   | v2506    | Python 3.11.11 |
+| private   | local       | ubuntu22.04.5     |                                       |             -          | v2312    | Python 3.13.0  | 
+| private   | local       | ubuntu24.04(WSL2) |     8Cores                            |             -          | v2506    | Python 3.12.3(System default)|
 
-上記の3つの環境を使っている。このリポジトリ内の設定ファイル(0/Uなど)やバッチファイル(*.sh や *.pbs)は、1つ目の環境(centOS7, OpenFOAM-v1612+)で使っている。
+上記の4つの環境を使っている。このリポジトリ内の設定ファイル(0/Uなど)やバッチファイル(*.sh や *.pbs)は、1つ目の環境(centOS7, OpenFOAM-v1612+)で使っている。
 
 #### OpenFOAMのバージョンについて
 OpenFOAMにはOpenCFD社によって年2回更新されるもの(OpenFOAM-v2312, OpenFOAM-v2406, ... )と、 OpenFOAM foundationによって年1回更新されるもの(OpenFOAM11(2022のもの), OpenFOAM12(2023のもの), OpenFOAM13(2024のもの), ...) とがあるが、とくにこだわりが無ければ前者のものでLinux環境に応じた最新のバージョンを利用するのが良いと思われる。最新のバージョンは https://www.openfoam.com/current-release で、各バージョンと Linux distribution との対応は https://www.openfoam.com/news/main-news/openfoam-v2506 で確認できる。
