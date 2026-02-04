@@ -89,6 +89,13 @@ OpenFOAMをインストールしたら、適当なチュートリアルケース
    └─ foo.msh     
 ```
 
+### 境界条件(`0/`)
+上記は血流解析で, simpleFoamソルバ, 層流, など限定してしまっているが, より一般的に境界条件の設定方法について知りたい場合は以下のサイトが参考になる
+
+[OpenFOAM 境界条件の設定](https://ss1.xrea.com/penguinitis.g1.xrea.com/study/OpenFOAM/bc_settings.html)
+
+
+
 
 ## 前処理と後処理
 メッシュ生成ツールとして、以下の2つを使っている。
