@@ -128,7 +128,7 @@ $ transformPoints -scale "(1e-3 1e-3 1e-3)"
 $ simpleFoam | tee log # ログ出力するオプションも付けておく
 ```
 <br>
-OpenFOAMは 圧力 p を p/rho として計算している(NS式の両辺をrhoで割ったものを解いているため)。<br>
+OpenFOAMは 圧力 p を p/rho として計算している(Navier-Stokes方程式の両辺をrhoで割ったものを解いているため)。<br>
 なので、計算終了後に p (やwallShearStress) に rho (血液なら1060kg/m^3) を掛ける後処理をしておく。
 
 ``` bash
