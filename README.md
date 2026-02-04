@@ -107,6 +107,7 @@ $ gmshToFoam foo.msh  # 他にも例えば、ICEM CFDで作成したメッシュ
 次に、いちおうメッシュの品質を確認しておく。
 ``` bash
 $ checkMesh
+# checkMesh -case . 2>&1 | tee log.checkMesh  ログファイルも残したい場合はこのコマンド
 ```
 これで `mesh failed.` などが出たら、メッシュのどこかが破綻していて、ほとんどの場合計算が発散したりするのでメッシュファイルを修正するか作り直すこと。
 `Mesh OK.`と出たらOK. <br>
