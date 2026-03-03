@@ -6,7 +6,7 @@ OpenFOAMのおぼえがき。環境構築、チュートリアルの実行、血
 |Usage Type | Environment | OS                |         CPU / Cores                   |  Job Scheduler         | OpenFOAM |   Python       |
 |-----------|-------------|-------------------|:-------------------------------------:|:----------------------:|:--------:|----------------|    
 | shared    | HPC cluster | CentOS 7.4.1708   |  login: 10 cores, compute: 36×3, 32×2 |  Portable Batch System | v1612+   | Python 3.11.0  |
-| shared    | Fugaku      | RHEL8.10          |  Fujitsu A64FX (**48cores/node**)      |  Project Job Manager   | v2506    | Python 3.11.11 |
+| shared    | Fugaku      | RHEL8.10          |  Fujitsu A64FX (**48cores/node**)      |  Project Job Manager   | v2412    | Python 3.11.11 |
 | private   | local       | ubuntu22.04.5     |                                       |             -          | v2312    | Python 3.13.0  | 
 | private   | local       | ubuntu24.04(WSL2) |     8Cores                            |             -          | v2506    | Python 3.12.3(System(WSL2) default)|
 
