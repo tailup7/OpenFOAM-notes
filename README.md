@@ -1,6 +1,6 @@
 # OpenFOAM-notes
 
-OpenFOAMのおぼえがき。環境構築とか、計算に使ったスクリプトとか。
+OpenFOAMのおぼえがき。環境構築、チュートリアルの実行、血流解析など。
 
 ### 動作確認環境
 |Usage Type | Environment | OS                |         CPU / Cores                   |  Job Scheduler         | OpenFOAM |   Python       |
@@ -26,17 +26,19 @@ sudo wget -O - http://dl.openfoam.com/add-debian-repo.sh | sudo bash
 sudo apt install openfoam2506-default
 ```
 これで、OpenFOAMのコンパイル済みライブラリやチュートリアルケースが `/usr/lib/openfoam/` に入る。
+
 <br>
+
 自分のシェル設定ファイル(`/home/user/.bashrc`)に、OpenFOAMの環境を使えるようにするための設定(`/usr/lib/openfoam/openfoam2506/etc/bashrc`) を追加し、bash起動時にOpenFOAMの環境が自動で読み込まれるようにする
 ``` bash
 echo "source /usr/lib/openfoam/openfoam2506/etc/bashrc" >> ~/.bashrc
 source ~/.bashrc
 ```
 設定ができたので、以下のコマンドで動作確認をしてみる。やっていることは、2D直交格子を生成し、キャビティ流れを`icoFoam`ソルバで解いている。
-```
-mkdir -p $FOAM_RUN
+``` bash
+mkdir -p $FOAM_RUN    # $FOAM_RUN means /home/username/OpenFOAM/username-v2506/run
 cd $FOAM_RUN
-cp -r $FOAM_TUTORIALS/incompressible/icoFoam/cavity/cavity .
+cp -r $FOAM_TUTORIALS/incompressible/icoFoam/cavity/cavity .# $FOAM_TUTORIALS means /usr/lib/openfoam/openfoam/openfoam2506/tutorials
 cd cavity
 blockMesh
 icoFoam
