@@ -17,7 +17,7 @@ OpenFOAMにはOpenCFD社によって年2回更新されるもの(OpenFOAM-v2312,
 
 
 ## OpenFOAMインストール手順
-(例. UbuntuOSまたはWSLによるUbuntu環境にOpenFOAM-v2506をインストールする) <br>
+(例. Ubuntu環境にOpenFOAM-v2506のバイナリ版をインストールする) <br>
 Ubuntu(22.04 or 24.04)ターミナルを起動し、以下コマンドを入力 
 ``` bash
 sudo apt update
@@ -25,8 +25,9 @@ sudo apt upgrade -y
 sudo wget -O - http://dl.openfoam.com/add-debian-repo.sh | sudo bash
 sudo apt install openfoam2506-default
 ```
-これで、OpenFOAMが /usr/lib/openfoam/ にインストールされた。
-自分のシェル設定ファイル(home/user/.bashrc)に、OpenFOAMの環境を自動で使えるようにするための設定(usr/lib/openfoam/openfoam2506/etc/bashrc に書いてある) を追加する以下のコマンドを実行
+これで、OpenFOAMのコンパイル済みライブラリやチュートリアルケースが `/usr/lib/openfoam/` に入る。
+<br>
+自分のシェル設定ファイル(`/home/user/.bashrc`)に、OpenFOAMの環境を使えるようにするための設定(`/usr/lib/openfoam/openfoam2506/etc/bashrc`) を追加し、bash起動時にOpenFOAMの環境が自動で読み込まれるようにする
 ``` bash
 echo "source /usr/lib/openfoam/openfoam2506/etc/bashrc" >> ~/.bashrc
 source ~/.bashrc
