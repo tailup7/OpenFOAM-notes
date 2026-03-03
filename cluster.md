@@ -1,8 +1,10 @@
-# Portable Batch System
-### 環境
+# ジョブスケジューラ
+
+## インハウス計算機クラスタ
+### OS
 + CentOS 7
 <br>
-自分が使用している計算機クラスタは、ジョブスケジューラに Portable Batch System (PBS) を使用している。<br>
+自分が使用しているインハウス計算機クラスタは、ジョブスケジューラに PBS (Portable Batch System) を使用している。<br>
 シェルスクリプトの拡張子は .sh ではなく .pbs とし、以下のコマンドでジョブ投入をする。
 <br>
 <br>
@@ -31,6 +33,13 @@ $ pbsnodes
 $ qdel <job ID> # 終了したいジョブのID
 ```
 <br>
+
+## 富岳
+### OS
++ RHEL 8
+
+富岳ではジョブスケジューラに富岳専用のジョブ管理システムである PJM (Priority Job Manager) を使用している。
+
 
 ## OpenMPI
 OpenFOAM は OpenMPI を用いて並列化を行い、解析領域(=メッシュ) を空間的に複数に分割して各processでそれぞれ計算を進め、MPI通信で分割された境界の情報をやりとりしながら全体としての計算が進む。 
