@@ -35,3 +35,6 @@
    ``` bash
    ./Allrun
    ```
+
+実行すると、まず`motorBike/motorBike`フォルダで計算が走る。これはsimpleFoamソルバ, 層流モデルでの計算。そのあと、`motorBike/motorBikeLES`フォルダが作成され、`lesFiles`の設定ファイルがコピーされたあと、`motorBike/motorBikeLES`フォルダで計算が走る。これはpisoFoamソルバ, LESモデルによる計算。(default設定のままの場合)どちらも並列数は8で実行される。
+
