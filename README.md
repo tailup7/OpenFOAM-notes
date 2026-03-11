@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # OpenFOAM-notes
 
 OpenFOAMのおぼえがき。環境構築、チュートリアルの実行、血流解析など。
