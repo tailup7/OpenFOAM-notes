@@ -1,7 +1,7 @@
 # motorBikeLES
 
 ## 概要
-チュートリアルケース`motorBikeLES`を, 原点(0,0,0)を通り面ベクトル(0,1,0)の断面でU, nut, nuTilda, p などをanimetion可視化するための手順
+チュートリアルケース`motorBikeLES`を, 原点(0,0,0)を通り面ベクトル(0,1,0)の断面でU, nut, nuTilda, p などをanimetion可視化するための手順。`lesFiles/controlDict`のように、あらかじめ断面のみを出力するように設定しておかないと、動画のような時間解像度(writeInterval)、時間長さ(endTime)で計算すると数百Gb程度のファイルサイズになってしまう。
 
 
 ## 手順
@@ -65,6 +65,7 @@
    </VTKFile>
    ```
    そのために、`convert_vtp_series.py`を実行する。生成される`forParaview/y0Plane/y0Plane.pvd`をParaViewにimportすると、animetion再生と保存ができる。
+
 
 
 
