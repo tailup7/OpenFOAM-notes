@@ -41,7 +41,7 @@
    ./Allrun
    ```
 
-   実行すると、まず`motorBike/motorBike`フォルダで計算が走る。これはsimpleFoamソルバ, 層流モデルでの計算。そのあと、`motorBike/motorBikeLES`フォルダが作成され、`lesFiles`の設定ファイルがコピーされたあと、`motorBike/motorBikeLES`フォルダで計算が走る。これはpisoFoamソルバ, LESモデルによる計算。(default設定のままの場合)どちらも並列数は8で実行される。
+   実行すると、まず`motorBike/motorBike`フォルダで計算が走る。これはsimpleFoamソルバ, 層流モデルでの計算。endTime=500まで計算した後、`motorBike/motorBikeLES`フォルダが作成され、`lesFiles`の設定ファイルがコピーされたあと、endTime=500の状態を初期場として`motorBike/motorBikeLES`フォルダで計算が走る。これはpisoFoamソルバ, LESモデルによる計算。(default設定のままの場合)どちらも並列数は8で実行される。
 
 5. `motorBikeLES/y0Plane/`に出力されるvtpファイル群を、ParaViewでanimetionとして可視化するために、例えば以下のような`.pvd`ファイルを作成する. 
    ``` bash
@@ -65,6 +65,7 @@
    </VTKFile>
    ```
    そのために、`convert_vtp_series.py`を実行する。生成される`forParaview/y0Plane/y0Plane.pvd`をParaViewにimportすると、animetion再生と保存ができる。
+
 
 
 
