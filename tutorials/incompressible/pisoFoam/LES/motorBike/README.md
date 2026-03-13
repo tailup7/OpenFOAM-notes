@@ -68,5 +68,11 @@
 
 
 
+#### 途中で計算が中断されてしまった場合
+意図しないシャットダウンなどでソルバ実行が中断されてしまったとき、再開するには
+1. `motorBikeLES/system/controlDict`の`startTime`を`startFrom       latestTime;`と書き換える
+2. `mpirun -np 8 pisoFoam -parallel > log.pisoFoam.restart 2>&1`
+   
+   ※ 並列数は、もともと実行していた並列数に合わせる
 
 
