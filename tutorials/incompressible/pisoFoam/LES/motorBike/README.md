@@ -1,7 +1,7 @@
 # motorBikeLES
 
 ## 概要
-チュートリアルケース`motorBikeLES`を, 原点(0,0,0)を通り面ベクトル(0,1,0)の断面でU, nut, nuTilda, p などをanimetion可視化するための手順。`lesFiles/controlDict`のように、あらかじめ断面のみを出力するように設定しておかないと、動画のような時間解像度(writeInterval)、時間長さ(endTime)で計算すると数百Gb程度のファイルサイズになってしまう。
+チュートリアルケース`motorBikeLES`を, 原点(0,0,0)を通り面ベクトル(0,1,0)の断面でU, nut, nuTilda, p などをanimetion可視化するための手順。`lesFiles/controlDict`のように、あらかじめ断面のみを出力するように設定しておかないと、[動画](https://youtu.be/99UNHrg3PR4?si=FMPPoeMsBKh7H4I7)のような時間解像度(writeInterval)、時間長さ(endTime)で計算すると数百Gb程度のファイルサイズになってしまう。
 
 
 ## 手順
@@ -10,11 +10,11 @@
    ``` bash
    motorBike/
       ├─ lesFiles/                # LES計算に使う設定ファイル群
-      │   ├─ Allrun               #
-      │   ├─ controlDict          # 
-      │   ├─ fvSchemes            # 
-      │   ├─ fvSolution            #
-      │   └─ turbulenceProperties  # 
+      │   ├─ Allrun               
+      │   ├─ controlDict          
+      │   ├─ fvSchemes            
+      │   ├─ fvSolution            
+      │   └─ turbulenceProperties 
       ├─ motorBike/
       │   ├─ 0.orig/          
       │   ├─ constant/
@@ -25,7 +25,7 @@
       └─ Allrun  
    ```
 
-2. アニメーションとして見やすくするために、`lesFiles/controlDict`をこのリポジトリにある`lesFiles/controlDict`に置き換える.
+2. `lesFiles/controlDict`をこのリポジトリにある`lesFiles/controlDict`に置き換える.
 
 
 3. 実行権限を与える。`motorBike`フォルダ直下で
