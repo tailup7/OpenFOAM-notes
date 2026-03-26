@@ -97,9 +97,9 @@ boundaryField
             // ==========================================
             // 2) パッチ幾何から C0 と R を自動計算（並列対応）
             // ==========================================
-            const vectorField& c  = patch().Cf();  // ローカルのフェイス中心
-            const vectorField& Sf = patch().Sf();  // ローカルの面積ベクトル
-            const vectorField& n  = patch().nf();  // ローカルの単位法線
+            const vectorField c(patch().Cf());   // ローカルのフェイス中心
+            const vectorField Sf(patch().Sf());  // ローカルの面積ベクトル
+            const vectorField n(patch().nf());   // ローカルの単位法線
 
             // ローカル集計
             scalar Atot_local = 0.0;
