@@ -2,7 +2,12 @@
 
 OpenFOAMのおぼえがき。環境構築、チュートリアルの実行、血流解析など。
 
-### 動作確認環境
+#### OpenFOAMのバージョンについて
+OpenFOAMにはOpenCFD社によって年2回更新されるもの(OpenFOAM-v2312, OpenFOAM-v2406, ... )と、 OpenFOAM foundationによって年1回更新されるもの(OpenFOAM11(2022のもの), OpenFOAM12(2023のもの), OpenFOAM13(2024のもの), ...) とがあるが、とくにこだわりが無ければ前者のものでLinux環境に応じた最新のバージョンを利用するのが良いと思われる。最新のバージョンは https://www.openfoam.com/current-release で、各バージョンと Linux distribution との対応は https://www.openfoam.com/news/main-news/openfoam-v2506 で確認できる。
+
+### 実行環境
+OpenFOAMはLinux環境で動作する。本リポジトリは下記の4つの環境で試している。Pythonは必須ではないがあると便利。
+
 |Usage Type | Environment | OS                |         CPU / Cores                   |  Job Scheduler         | OpenFOAM |   Python       |
 |-----------|-------------|-------------------|:-------------------------------------:|:----------------------:|:--------:|----------------|    
 | shared    | HPC cluster | CentOS 7.4.1708   |  login: 10 cores, compute: 36×3, 32×2 |  Portable Batch System | v1612+   | Python 3.11.0  |
@@ -10,10 +15,9 @@ OpenFOAMのおぼえがき。環境構築、チュートリアルの実行、血
 | private   | local       | ubuntu22.04.5     |                                       |             -          | v2312    | Python 3.13.0  | 
 | private   | local       | ubuntu24.04(WSL2) |     8Cores                            |             -          | v2506    | Python 3.12.3(System(WSL2) default)|
 
-上記の4つの環境を使っている。Pythonは必須ではないがあると便利。
 
-#### OpenFOAMのバージョンについて
-OpenFOAMにはOpenCFD社によって年2回更新されるもの(OpenFOAM-v2312, OpenFOAM-v2406, ... )と、 OpenFOAM foundationによって年1回更新されるもの(OpenFOAM11(2022のもの), OpenFOAM12(2023のもの), OpenFOAM13(2024のもの), ...) とがあるが、とくにこだわりが無ければ前者のものでLinux環境に応じた最新のバージョンを利用するのが良いと思われる。最新のバージョンは https://www.openfoam.com/current-release で、各バージョンと Linux distribution との対応は https://www.openfoam.com/news/main-news/openfoam-v2506 で確認できる。
+
+
 
 
 ## OpenFOAMインストール手順
@@ -53,29 +57,33 @@ foamToVTK
 + [OpenFOAM のインストール](https://ss1.xrea.com/penguinitis.g1.xrea.com/study/OpenFOAM/install_memo/install_memo.html)
 
 ## ケース構成
-OpenFOAMをインストールしたら、適当なチュートリアルケースからパッケージをコピーするなどして、以下のようなケース構成を用意する。
-自分の解析したい条件に合わせて設定ファイルを追加したり、中身を書き換える。自身で用意したメッシュをインポートして流体解析を行う場合、以下のようなディレクトリ構成になる。
+OpenFOAMをインストールしたら、適当なチュートリアルケースからコピーするなどして、以下のようなケース構成を用意する。
+
 
 ``` bash
   root/
    ├─ 0/                        # 初期条件・境界条件を設定
    │   ├─ U                     # 速度場
-   │   └─ P                     # 圧力場
+   │   ├─ P                     # 圧力場
+#  │   └─                       # 乱流モデルで計算をする場合には他にも k, nut などの設定ファイルを用意することもある。
    ├─ constant/
-   │   ├─ polyMesh/             # gmshToFoam や fluentMeshToFoam をした段階で生成される。はじめは不要。
-   │   ├─ transportProperties   # 流体の物性値(動粘性係数) の設定
-   │   └─ turbulenceProperties  # 乱流モデルの設定
-   ├─ dynamicCode/              # 設定ファイル内でcodeFixedValue等の動的コードを使っていると、計算開始時に生成。はじめは不要。
+#  │   ├─ polyMesh/             # gmshToFoam や fluentMeshToFoam をした段階で生成される。あらかじめ用意するものではない。
+   │   ├─ transportProperties   # 流体の物性値(動粘性係数) の設定ファイル。
+   │   └─ turbulenceProperties  # 乱流モデルの設定ファイル。
+#  ├─ dynamicCode/              # 設定ファイル(0/U)内でcodeFixedValue等の動的コードを使っていると、ソルバ実行時にコンパイルされ生成される。あらかじめ用意するものではない。
    ├─ system/
    │   ├─ controlDict           # ソルバ、時間刻み、可視化用の出力刻み、終了時刻、functionObject(WSSの計算とか)の設定
-   │   ├─ decomposeParDict      # 並列化するなら必要。しないなら不要。
+   │   ├─ decomposeParDict      # 並列計算するなら必要。しないなら不要。並列数に合わせてファイル内のnumberOfSubdomainsの値を書き替える。
    │   ├─ fvSchemes             # 数値スキーム(支配方程式の各項の離散化手法)の設定。
    │   ├─ fvSolution            # 連立方程式ソルバや収束条件の設定。
    │   └─ meshQualityDict       # メッシュ品質チェック用。基本的に不要。
-   ├─ foo.msh                   # ファイル名は自由。流体解析するメッシュ。他にも(*.cas)とか。
-   └─ read.foam                 # ファイル名は自由。ParaViewで可視化するための空フォルダ。計算には不要。
+   ├─ foo.msh                   # 流体解析するメッシュファイル(ファイル名は任意)。他にも(*.cas)とか。
+   └─ read.foam                 # ParaViewで可視化するための空ファイル(ファイル名は任意)。計算には不要。
 ```
 
+自分の解析したい条件に合わせて設定ファイルを追加したり、ファイル内の設定値を書き換える。
+
+<!---
 計算のために最低限必要なファイル・フォルダ構成は以下のようになる(simpleFoamソルバで, laminar(層流)として計算する場合)。
 ``` bash
   root/
@@ -91,9 +99,10 @@ OpenFOAMをインストールしたら、適当なチュートリアルケース
    │   └─ fvSolution  
    └─ foo.msh     
 ```
+--->
 
 ### 境界条件(`0/`)
-上記は血流解析で, simpleFoamソルバ, 層流, など限定してしまっているが, より一般的に境界条件の設定方法について知りたい場合は以下のサイトが参考になる
+境界条件の設定については以下のサイトが参考になる
 
 [OpenFOAM 境界条件の設定](https://ss1.xrea.com/penguinitis.g1.xrea.com/study/OpenFOAM/bc_settings.html)
 
@@ -105,7 +114,7 @@ OpenFOAMをインストールしたら、適当なチュートリアルケース
 + Ansys ICEM CFD
 + Gmsh
 
-Ansys ICEM CFDは商用ツールであり、自身もいずれライセンスが切れるため、OSSであるGmshを主に使っている。このリポジトリ内のバッチファイル(*.sh や *.pbs)は、Gmsh形式とFluent形式のどちらでも対応するようにしている。<br>
+Ansys ICEM CFDは有償の商用ソフトウェアであり、GmshはOSSである。このリポジトリ内のバッチファイル(*.sh や *.pbs)は、Gmsh形式とFluent形式のどちらでも対応するようにしている。<br>
 <br>
 また解析結果の可視化には ParaView を使用している。
 
