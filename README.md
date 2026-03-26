@@ -10,7 +10,7 @@ OpenFOAMのおぼえがき。環境構築、チュートリアルの実行、血
 | private   | local       | ubuntu22.04.5     |                                       |             -          | v2312    | Python 3.13.0  | 
 | private   | local       | ubuntu24.04(WSL2) |     8Cores                            |             -          | v2506    | Python 3.12.3(System(WSL2) default)|
 
-上記の4つの環境を使っている。このリポジトリ内の設定ファイル(0/Uなど)やバッチファイル(*.sh や *.pbs)は、1つ目の環境(centOS7, OpenFOAM-v1612+)で使っている。
+上記の4つの環境を使っている。Pythonは必須ではないがあると便利。
 
 #### OpenFOAMのバージョンについて
 OpenFOAMにはOpenCFD社によって年2回更新されるもの(OpenFOAM-v2312, OpenFOAM-v2406, ... )と、 OpenFOAM foundationによって年1回更新されるもの(OpenFOAM11(2022のもの), OpenFOAM12(2023のもの), OpenFOAM13(2024のもの), ...) とがあるが、とくにこだわりが無ければ前者のものでLinux環境に応じた最新のバージョンを利用するのが良いと思われる。最新のバージョンは https://www.openfoam.com/current-release で、各バージョンと Linux distribution との対応は https://www.openfoam.com/news/main-news/openfoam-v2506 で確認できる。
