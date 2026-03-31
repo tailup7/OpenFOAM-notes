@@ -21,3 +21,14 @@ find . -maxdepth 3 \( -name "Allrun*" -o -name "Allclean*" \) -type f -exec chmo
 ``` bash
 ./Allrun
 ```
+
+## 計算中でも途中までの計算結果を可視化したいとき
+別ターミナルを開いて、
+``` bash
+reconstructPar
+```
+をすればよい。2回目以降は、一度生成した時刻フォルダを削除してから(`0/`は削除しないこと)再度`reconstructPar`するか、
+``` bash
+reconstructPar -newTimes
+```
+で追加で計算済みになった時刻フォルダを生成できる。
